@@ -1,18 +1,31 @@
 import styled from 'styled-components';
-import { useState } from "react";
-import ImageModal from "./ImageModal";
+import {Suspense,lazy, useEffect, useState } from "react";
+// import ImageModal from "./ImageModal";
+const ImageModal = lazy(() => import('./ImageModal'));
 
 const Gallery = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
-
+  const handleMouseEnter = () => {
+    // const _ = import('./ImageModal');
+  }
+// 여기가
+  useEffect(()=>{
+const _ = import('./ImageModal');
+const img = new Image()
+img.src = './0.jpg'
+  },[])
   return (
     <div>
-      <AlbumButton onClick={() => setIsModalOpen(true)}>My album</AlbumButton>
+      {/* 여기가 preload컴포넌트 */}
+      <AlbumButton onClick={() => setIsModalOpen(true)}
+      //  onMouseEnter={handleMouseEnter}
+       >My album</AlbumButton>
       {/* 
         * TODO 4.
         * [로딩 최적화 - 컴포넌트 Lazy Load] 
         * 'react-image-gallery'은 모달 내에서만 사용하는 모듈이지만
         * 메인페이지의 번들에 포함되어 있습니다.
+        * lazy + suspense
       */}
 
       {/* 
@@ -27,7 +40,10 @@ const Gallery = () => {
         * [로딩 최적화 - 이미지 Preload] 
         * 처음 모달을 열었을 때 이미지를 로드하기 전과 후의 모달 사이즈가 달라집니다.
       */}
+      {/* 요기가컴포넌트 레이지로드 */}
+      <Suspense>
       { isModalOpen && <ImageModal onClose={() => setIsModalOpen(false)} />}
+      </Suspense>
     </div>
   )
 }
